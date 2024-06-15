@@ -5,6 +5,6 @@
 #ifndef GL_GRID_RENDERER_H
 #define GL_GRID_RENDERER_H
 
-void renderer_run(void);
+void renderer_draw(void);
 
 #endif //GL_GRID_RENDERER_H

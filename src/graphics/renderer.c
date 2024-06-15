@@ -3,15 +3,15 @@
 //
 
 #include <GLFW/glfw3.h>
+
 #include "graphics/renderer.h"
 
 extern GLFWwindow *window_instance;
 
-void renderer_run(void) {
-    while (!glfwWindowShouldClose(window_instance)) {
+void renderer_draw(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window_instance);
-        glfwPollEvents();
-    }
+    // other drawing stuff here
+
+    glfwSwapBuffers(window_instance);
 }

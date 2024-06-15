@@ -58,6 +58,8 @@ void window_init(void) {
         exit(EXIT_FAILURE);
     }
 
+    glfwSwapInterval(0);
+
     glfwSetKeyCallback(window_instance, key_callback);
     glfwSetFramebufferSizeCallback(window_instance, framebuffer_size_callback);
     glfwSetMouseButtonCallback(window_instance, mouse_button_callback);

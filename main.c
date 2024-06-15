@@ -1,15 +1,14 @@
 #include <stdlib.h>
 
 #include "graphics/window.h"
-#include "graphics/shader.h"
-#include "graphics/renderer.h"
+#include "game/game.h"
 
 int main(void) {
 
     window_init();
-    shader_init();
+    game_init();
 
-    renderer_run();
+    game_run();
 
     window_destroy();
 
