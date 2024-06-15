@@ -14,7 +14,7 @@
 #define WINDOW_WIDTH                1920
 #define WINDOW_HEIGHT               1080
 
-GLFWwindow *window_instance;
+GLFWwindow *window_instance = NULL;
 
 static void error_callback(int error, const char *description);
 

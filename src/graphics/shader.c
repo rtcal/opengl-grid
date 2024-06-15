@@ -10,13 +10,13 @@
 
 #define LOG_BUFFER_LENGTH           512
 
-static shader_program_t SHADER_PROGRAMS[COUNT_SHADERS];
+static GLuint SHADER_PROGRAMS[COUNT_SHADERS];
 
 static return_t shader_source_read(const char *filepath, char **content);
 
 static return_t shader_compile(const char *source, GLenum type, GLuint *shader);
 
-static return_t shader_program_create(const char *vpath, const char *fpath, shader_program_t *program);
+static return_t shader_program_create(const char *vpath, const char *fpath, GLuint *program);
 
 void shader_init(void) {
 
@@ -25,6 +25,10 @@ void shader_init(void) {
         exit(EXIT_FAILURE);
     }
 
+}
+
+void shader_use(shader_type_e type) {
+    glUseProgram(SHADER_PROGRAMS[type]);
 }
 
 static return_t shader_source_read(const char *filepath, char **content) {
@@ -47,7 +51,13 @@ static return_t shader_source_read(const char *filepath, char **content) {
         return RET_BAD;
     }
 
-    fread(*content, 1, length, file);
+    if (fread(*content, 1, length, file) != (size_t) length) {
+        fprintf(stderr, "ERROR::SHADER::FILE_READ_FAILED %s\n", filepath);
+        fclose(file);
+        free(*content);
+        return RET_BAD;
+    }
+
     (*content)[length] = '\0';
     fclose(file);
 
@@ -66,7 +76,7 @@ static return_t shader_compile(const char *source, GLenum type, GLuint *shader) 
 
     glGetShaderiv(*shader, GL_COMPILE_STATUS, &success);
 
-    if (success == GL_FALSE) {
+    if (success != GL_TRUE) {
         glGetShaderInfoLog(*shader, LOG_BUFFER_LENGTH, NULL, infoLog);
         fprintf(stderr, "ERROR::SHADER::COMPILATION_FAILED\n%s\n", infoLog);
         glDeleteShader(*shader);
@@ -76,7 +86,7 @@ static return_t shader_compile(const char *source, GLenum type, GLuint *shader) 
     return RET_GOOD;
 }
 
-static return_t shader_program_create(const char *vpath, const char *fpath, shader_program_t *program) {
+static return_t shader_program_create(const char *vpath, const char *fpath, GLuint *program) {
 
     GLint success;
     char *v_source;
@@ -109,16 +119,16 @@ static return_t shader_program_create(const char *vpath, const char *fpath, shad
         return RET_BAD;
     }
 
-    program->id = glCreateProgram();
+    *program = glCreateProgram();
 
-    glAttachShader(program->id, v_shader);
-    glAttachShader(program->id, f_shader);
-    glLinkProgram(program->id);
+    glAttachShader(*program, v_shader);
+    glAttachShader(*program, f_shader);
+    glLinkProgram(*program);
 
-    glGetProgramiv(program->id, GL_LINK_STATUS, &success);
+    glGetProgramiv(*program, GL_LINK_STATUS, &success);
 
-    if (success == GL_FALSE) {
-        glGetProgramInfoLog(program->id, LOG_BUFFER_LENGTH, NULL, infoLog);
+    if (success != GL_TRUE) {
+        glGetProgramInfoLog(*program, LOG_BUFFER_LENGTH, NULL, infoLog);
         fprintf(stderr, "ERROR::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
     }
 
@@ -127,8 +137,8 @@ static return_t shader_program_create(const char *vpath, const char *fpath, shad
     glDeleteShader(v_shader);
     glDeleteShader(f_shader);
 
-    if (success == GL_FALSE) {
-        glDeleteProgram(program->id);
+    if (success != GL_TRUE) {
+        glDeleteProgram(*program);
         return RET_BAD;
     }
 

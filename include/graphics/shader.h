@@ -12,10 +12,8 @@ typedef enum {
     COUNT_SHADERS
 } shader_type_e;
 
-typedef struct {
-    GLuint id;
-} shader_program_t;
-
 void shader_init(void);
+
+void shader_use(shader_type_e type);
 
 #endif //GL_GRID_SHADER_H

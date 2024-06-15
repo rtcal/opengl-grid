@@ -9,4 +9,8 @@ void game_init(void);
 
 void game_run(void);
 
+int game_tick_get(void);
+
+int game_fps_get(void);
+
 #endif //GL_GRID_GAME_H
