@@ -7,13 +7,8 @@
 
 #include <GL/glew.h>
 
-typedef enum {
-    SHADER_DEFAULT,
-    COUNT_SHADERS
-} shader_type_e;
+#include "error.h"
 
-void shader_init(void);
-
-void shader_use(shader_type_e type);
+return_t shader_program_create(const char *vpath, const char *fpath, GLuint *program);
 
 #endif //GL_GRID_SHADER_H

@@ -5,12 +5,44 @@
 #ifndef GL_GRID_GAME_H
 #define GL_GRID_GAME_H
 
-void game_init(void);
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <cglm/cglm.h>
 
-void game_run(void);
+#include "graphics/shader.h"
 
-int game_tick_get(void);
+typedef enum {
+    SHADER_BASIC,
+    COUNT_SHADERS
+} shader_type_e;
 
-int game_fps_get(void);
+typedef struct {
+
+    struct {
+        GLFWwindow *window;
+        mat4 proj_mat;
+    } screen;
+
+    struct {
+        GLuint shaders[COUNT_SHADERS];
+    } graphics;
+
+    struct {
+        const vec3 *position;
+        const float *pitch;
+        const float *yaw;
+    } player;
+
+    struct {
+        double delta;
+        int tick;
+        int fps;
+    } time;
+
+} game_t;
+
+void game_init(game_t **game);
+
+void game_run(game_t *game);
 
 #endif //GL_GRID_GAME_H

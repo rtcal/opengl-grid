@@ -4,8 +4,10 @@
 
 int main(void) {
 
-    game_init();
-    game_run();
+    game_t *game = NULL;
+
+    game_init(&game);
+    game_run(game);
 
     return EXIT_SUCCESS;
 }

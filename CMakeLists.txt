@@ -30,9 +30,19 @@ target_link_libraries(
         cglm::cglm
 )
 
+set(SHADER_DIR $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
+
+add_custom_command(
+        TARGET ${PROJECT_NAME} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf ${SHADER_DIR}
+        COMMENT "Removing old shaders directory..."
+)
+
 add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
+        ${CMAKE_SOURCE_DIR}/shaders ${SHADER_DIR}
+        COMMENT "Copying new shaders directory..."
+)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders")
