@@ -3,6 +3,7 @@
 //
 
 #include "input/camera.h"
+#include "error.h"
 
 #define CAMERA_FRONT               (vec3){0.0f, 0.0f, -1.0f}
 #define CAMERA_UP                  (vec3){0.0f, 1.0f, 0.0f}
@@ -12,7 +13,6 @@
 static struct {
     vec3 position;
 
-    vec3 up;
     vec3 front;
     vec3 right;
 
@@ -42,7 +42,6 @@ void camera_init(vec3 position, float pitch, float yaw) {
     glm_vec3_copy(position, camera_instance.position);
 
     glm_vec3_copy(CAMERA_FRONT, camera_instance.front);
-    glm_vec3_copy(CAMERA_UP, camera_instance.up);
 
     camera_yaw_set(yaw);
     camera_pitch_set(pitch);
@@ -113,10 +112,8 @@ static void camera_update(void) {
     glm_vec3_cross(camera_instance.front, CAMERA_UP, camera_instance.right);
     glm_vec3_normalize(camera_instance.right);
 
-    glm_vec3_copy(CAMERA_UP, camera_instance.up);
-
     camera_instance.position[1] = 0.0f;
 
     glm_vec3_add(camera_instance.position, camera_instance.front, centre);
-    glm_lookat(camera_instance.position, centre, camera_instance.up, camera_instance.view_mat);
+    glm_lookat(camera_instance.position, centre, CAMERA_UP, camera_instance.view_mat);
 }

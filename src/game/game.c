@@ -16,7 +16,7 @@
 #define WINDOW_HEIGHT_HALF          (WINDOW_HEIGHT / 2.0f)
 
 #define WINDOW_ASPECT_RATIO         ((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT)
-#define WINDOW_FOV                  90.0f
+#define WINDOW_FOV                  45.0f
 #define WINDOW_NEAR                 0.1f
 #define WINDOW_FAR                  100.0f
 
@@ -30,7 +30,7 @@
 #define PLAYER_PITCH                0.0f
 #define PLAYER_YAW                  (-90.0f)
 
-#define PLAYER_SPEED_MOVE           5.0f
+#define PLAYER_SPEED_MOVE           4.0f
 #define PLAYER_SPEED_MOUSE          0.025f
 
 #define GAME_TICKS                  1
@@ -155,9 +155,7 @@ void game_run(game_t *game) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.43f, 0.69f, 1.0f, 1.0f);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        cube_render((*game).screen.proj_mat, (vec4 *) camera_view_matrix());
+        cube_render((vec4 *) camera_view_matrix(), (*game).screen.proj_mat);
 
         glfwSwapBuffers(game->screen.window);
 
@@ -208,10 +206,13 @@ static void game_input_update(game_t *game) {
 
     if (glfwGetKey(game->screen.window, GLFW_KEY_W) == GLFW_PRESS) direction[2] += 1.0f;
     if (glfwGetKey(game->screen.window, GLFW_KEY_S) == GLFW_PRESS) direction[2] += -1.0f;
+
     if (glfwGetKey(game->screen.window, GLFW_KEY_A) == GLFW_PRESS) direction[0] += -1.0f;
     if (glfwGetKey(game->screen.window, GLFW_KEY_D) == GLFW_PRESS) direction[0] += 1.0f;
 
     glm_vec3_scale(direction, PLAYER_SPEED_MOVE * game->time.delta, direction);
+
+    LOG_DBG("Destination {%f,%f,%f}\n", direction[0], direction[1], direction[2]);
 
     camera_move(direction);
 }
